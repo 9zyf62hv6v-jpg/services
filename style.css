@@ -1,0 +1,377 @@
+/* Сброс и базовые настройки */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #0a0a0a;
+    color: #ffffff;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Навигация */
+.navbar {
+    padding: 20px 0;
+    position: sticky;
+    top: 0;
+    background: rgba(10, 10, 10, 0.8);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.logo span {
+    color: #6366f1;
+}
+
+.nav-links {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+}
+
+.nav-links a {
+    color: #a1a1aa;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.nav-links a:hover {
+    color: #ffffff;
+}
+
+/* Кнопки в навигации */
+.nav-contact-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-nav {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-max {
+    background: #7c3aed; /* Фиолетовый для MAX */
+    color: white !important;
+}
+
+.btn-max:hover {
+    background: #6d28d9;
+}
+
+.btn-tg {
+    background: #229ED9; /* Синий для Telegram */
+    color: white !important;
+}
+
+.btn-tg:hover {
+    background: #1d8cbf;
+}
+
+/* Hero секция */
+.hero {
+    padding: 100px 0 80px;
+    text-align: center;
+    background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 60%);
+}
+
+.badge {
+    display: inline-block;
+    padding: 6px 16px;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 100px;
+    color: #818cf8;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
+}
+
+.hero h1 {
+    font-size: 3.8rem;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    max-width: 900px;
+    margin: 0 auto 24px;
+    background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: #a1a1aa;
+    max-width: 700px;
+    margin: 0 auto 40px;
+}
+
+/* Кнопки главные */
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    display: inline-block;
+    padding: 14px 28px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-primary, .btn-max {
+    background: #7c3aed;
+    color: white;
+}
+
+.btn-primary:hover, .btn-max:hover {
+    background: #6d28d9;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px -10px rgba(124, 58, 237, 0.5);
+}
+
+.btn-tg {
+    background: #229ED9;
+    color: white;
+}
+
+.btn-tg:hover {
+    background: #1d8cbf;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px -10px rgba(34, 158, 217, 0.5);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: #ffffff;
+    border: 1px solid #27272a;
+}
+
+.btn-secondary:hover {
+    background: #18181b;
+    border-color: #3f3f46;
+}
+
+/* Секции */
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 60px;
+    letter-spacing: -0.5px;
+}
+
+.services {
+    padding: 100px 0;
+}
+
+/* Сетка услуг */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.service-card {
+    background: #121212;
+    border: 1px solid #27272a;
+    border-radius: 16px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+}
+
+.service-card:hover {
+    border-color: #3f3f46;
+}
+
+.card-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(99, 102, 241, 0.08) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+
+.service-card:hover .card-glow {
+    opacity: 1;
+}
+
+.service-card .icon {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.service-card h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.service-card p {
+    color: #a1a1aa;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+}
+
+.features {
+    list-style: none;
+}
+
+.features li {
+    color: #71717a;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.features li::before {
+    content: "→";
+    margin-right: 8px;
+    color: #6366f1;
+}
+
+/* Секция преимуществ */
+.features-section {
+    padding: 80px 0 100px;
+    background: #0f0f0f;
+    border-top: 1px solid #27272a;
+    border-bottom: 1px solid #27272a;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+}
+
+.feature-box {
+    text-align: center;
+}
+
+.feature-icon {
+    font-size: 2rem;
+    margin-bottom: 16px;
+    display: inline-block;
+    padding: 16px;
+    background: #18181b;
+    border-radius: 12px;
+    border: 1px solid #27272a;
+}
+
+.feature-box h4 {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.feature-box p {
+    color: #a1a1aa;
+    font-size: 0.9rem;
+}
+
+/* Footer */
+.footer {
+    padding: 100px 0 40px;
+    text-align: center;
+    background: radial-gradient(circle at 50% 100%, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
+}
+
+.footer h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+}
+
+.footer p {
+    color: #a1a1aa;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.footer-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+}
+
+.footer-bottom {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid #27272a;
+    color: #52525b;
+    font-size: 0.9rem;
+}
+
+/* Адаптив под мобилки */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+    
+    .nav-links > a:not(.btn-nav) {
+        display: none; /* На мобилках скрываем текстовые ссылки */
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .footer h2 {
+        font-size: 1.8rem;
+    }
+    
+    .cta-buttons .btn {
+        width: 100%; /* Кнопки на всю ширину */
+        text-align: center;
+    }
+}
