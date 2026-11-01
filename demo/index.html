@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Доставка роллов | Тест</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background: #f8f9fa; color: #333; padding-bottom: 250px; }
+        header { background: #e74c3c; color: white; padding: 20px; text-align: center; }
+        header h1 { font-size: 1.5rem; margin-bottom: 5px; }
+        header p { font-size: 0.9rem; opacity: 0.9; }
+
+        .menu { display: flex; flex-direction: column; gap: 15px; padding: 20px; }
+        .item { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+        .item-info h3 { font-size: 1.1rem; margin-bottom: 5px; }
+        .item-info p { color: #777; font-size: 0.85rem; margin-bottom: 10px; }
+        .item-info .price { font-size: 1.2rem; font-weight: bold; color: #e74c3c; }
+        .item button { background: #e74c3c; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; }
+
+        .cart-panel { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 20px; border-radius: 20px 20px 0 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); max-height: 40vh; overflow-y: auto; }
+        .cart-panel h2 { font-size: 1.2rem; margin-bottom: 10px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .cart-panel ul { list-style: none; margin-bottom: 15px; }
+        .cart-panel li { margin-bottom: 8px; font-size: 0.9rem; display: flex; justify-content: space-between; }
+        .cart-panel li button { background: #ffcccc; color: #c0392b; border: none; border-radius: 4px; padding: 2px 8px; font-weight: bold; }
+        .total { font-weight: bold; font-size: 1.2rem; margin-bottom: 15px; }
+        .checkout-btn { background: #27ae60; color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; cursor: pointer; font-size: 1.1rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>🍣 Sushi Master</h1>
+    <p>Свежие роллы с доставкой за 60 минут</p>
+</header>
+
+<main class="menu">
+    <div class="item">
+        <div class="item-info">
+            <h3>Филадельфия</h3>
+            <p>Лосось, сыр, огурец</p>
+            <span class="price">450 ₽</span>
+        </div>
+        <button onclick="addToCart('Филадельфия', 450)">В корзину</button>
+    </div>
+    <div class="item">
+        <div class="item-info">
+            <h3>Калифорния</h3>
+            <p>Краб, авокадо, икра</p>
+            <span class="price">390 ₽</span>
+        </div>
+        <button onclick="addToCart('Калифорния', 390)">В корзину</button>
+    </div>
+    <div class="item">
+        <div class="item-info">
+            <h3>Запеченный лосось</h3>
+            <p>Лосось, сыр, соус спайси</p>
+            <span class="price">420 ₽</span>
+        </div>
+        <button onclick="addToCart('Запеченный лосось', 420)">В корзину</button>
+    </div>
+</main>
+
+<div id="cart" class="cart-panel">
+    <h2>Корзина</h2>
+    <ul id="cart-items"></ul>
+    <p class="total">Итого: <span id="total-price">0</span> ₽</p>
+    <button class="checkout-btn" onclick="checkout()">Оформить заказ</button>
+</div>
+
+<script>
+    let cart = [];
+    let total = 0;
+
+    function addToCart(name, price) {
+        cart.push({ name, price });
+        total += price;
+        updateCart();
+    }
+
+    function updateCart() {
+        const list = document.getElementById('cart-items');
+        list.innerHTML = '';
+        cart.forEach((item, index) => {
+            list.innerHTML += `<li>${item.name} - ${item.price} ₽ <button onclick="removeItem(${index})">x</button></li>`;
+        });
+        document.getElementById('total-price').innerText = total;
+    }
+
+    function removeItem(index) {
+        total -= cart[index].price;
+        cart.splice(index, 1);
+        updateCart();
+    }
+
+    function checkout() {
+        if (cart.length === 0) return alert('Корзина пуста!');
+
+        const order = {
+            id: Math.floor(Math.random() * 10000),
+            items: cart,
+            total: total,
+            time: new Date().toLocaleTimeString()
+        };
+
+        localStorage.setItem('last_order', JSON.stringify(order));
+        alert('Заказ оформлен! Теперь откройте вкладку "admin.html" и посмотрите на кухню.');
+        cart = [];
+        total = 0;
+        updateCart();
+    }
+</script>
+</body>
+</html>
