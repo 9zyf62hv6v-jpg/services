@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кухня | Панель управления</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background: #1e272e; color: #ecf0f1; min-height: 100vh; }
+
+        .admin-header { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #2c3e50; position: sticky; top: 0; z-index: 10; }
+        .admin-header h1 { font-size: 1.2rem; }
+        .status { background: #27ae60; padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; }
+        .clear-btn { background: #c0392b; color: white; border: none; padding: 8px 12px; border-radius: 5px; font-size: 0.8rem; }
+
+        .orders-grid { display: flex; flex-direction: column; gap: 15px; padding: 15px; }
+        .empty-state { text-align: center; color: #7f8c8d; font-size: 1.1rem; padding: 40px 20px; }
+
+        .order-card { background: #34495e; border-radius: 12px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); border-left: 6px solid #27ae60; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .order-header { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #465d73; padding-bottom: 10px; }
+        .order-header h3 { font-size: 1.2rem; }
+        .order-card ul { list-style: none; margin-bottom: 15px; }
+        .order-card ul li { margin-bottom: 8px; font-size: 1rem; }
+        .order-card h4 { margin-bottom: 15px; color: #f1c40f; font-size: 1.2rem; }
+        .print-btn { background: #2980b9; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 1.1rem; font-weight: bold; }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
+        .receipt { background: white; color: black; padding: 25px; border-radius: 10px; width: 100%; max-width: 350px; font-family: 'Courier New', Courier, monospace; }
+        .receipt h2 { text-align: center; margin-bottom: 15px; font-size: 1.2rem; }
+        .receipt p { text-align: center; font-size: 0.9rem; margin-bottom: 5px; }
+        .receipt hr { border-top: 1px dashed black; margin: 15px 0; }
+        .receipt ul { list-style: none; font-size: 0.95rem; margin-bottom: 15px; }
+        .receipt ul li { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .close-receipt-btn { background: #27ae60; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; font-size: 1rem; margin-top: 15px; }
+    </style>
+</head>
+<body>
+<header class="admin-header">
+    <h1>👨‍🍳 Кухня</h1>
+    <div class="status">🟢 Онлайн</div>
+    <button onclick="clearOrders()" class="clear-btn">Очистить</button>
+</header>
+
+<main id="orders-container" class="orders-grid">
+    <div class="empty-state">Ожидание заказов...</div>
+</main>
+
+<div id="receipt-modal" class="modal">
+    <div class="receipt">
+        <h2>*** Sushi Master ***</h2>
+        <p id="receipt-id">Чек №</p>
+        <p id="receipt-time"></p>
+        <hr>
+        <ul id="receipt-items"></ul>
+        <hr>
+        <p><strong>ИТОГО: <span id="receipt-total"></span> ₽</strong></p>
+        <p style="text-align: center; margin-top: 15px;">Спасибо за заказ!</p>
+        <button onclick="closeReceipt()" class="close-receipt-btn">Закрыть (Готово)</button>
+    </div>
+</div>
+
+<script>
+    const audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
+    let lastOrderId = null;
+    let activeOrders = [];
+
+    setInterval(() => {
+        const orderData = localStorage.getItem('last_order');
+        if (orderData) {
+            const order = JSON.parse(orderData);
+            if (order.id !== lastOrderId) {
+                lastOrderId = order.id;
+                audio.play().catch(() => {});
+                activeOrders.push(order);
+                renderOrder(order);
+            }
+        }
+    }, 1000);
+
+    function renderOrder(order) {
+        const container = document.getElementById('orders-container');
+        const emptyState = container.querySelector('.empty-state');
+        if (emptyState) emptyState.remove();
+
+        const card = document.createElement('div');
+        card.className = 'order-card';
+
+        const itemsHtml = order.items.map(i => `<li>${i.name}</li>`).join('');
+
+        card.innerHTML = `
+            <div class="order-header">
+                <h3>Заказ #${order.id}</h3>
+                <span class="time">${order.time}</span>
+            </div>
+            <ul>${itemsHtml}</ul>
+            <h4>Итого: ${order.total} ₽</h4>
+            <button class="print-btn">🖨️ Напечатать чек</button>
+        `;
+
+        card.querySelector('.print-btn').addEventListener('click', () => openReceipt(order.id));
+        container.prepend(card);
+    }
+
+    function openReceipt(orderId) {
+        const order = activeOrders.find(o => o.id === orderId);
+        if (!order) return;
+
+        document.getElementById('receipt-id').innerText = `Чек №${order.id}`;
+        document.getElementById('receipt-time').innerText = `Время: ${order.time}`;
+        document.getElementById('receipt-total').innerText = order.total;
+
+        const itemsList = document.getElementById('receipt-items');
+        itemsList.innerHTML = '';
+        order.items.forEach(item => {
+            itemsList.innerHTML += `<li><span>${item.name}</span><span>${item.price} ₽</span></li>`;
+        });
+
+        document.getElementById('receipt-modal').style.display = 'flex';
+    }
+
+    function closeReceipt() {
+        document.getElementById('receipt-modal').style.display = 'none';
+    }
+
+    function clearOrders() {
+        document.getElementById('orders-container').innerHTML = '<div class="empty-state">Ожидание заказов...</div>';
+        localStorage.removeItem('last_order');
+        lastOrderId = null;
+        activeOrders = [];
+    }
+</script>
+</body>
+</html>
